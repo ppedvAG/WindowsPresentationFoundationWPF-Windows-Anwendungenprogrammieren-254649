@@ -1,0 +1,85 @@
+﻿<Window x:Class="M004.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:local="clr-namespace:M004"
+        Title="MainWindow" Height="450" Width="300"
+		WindowStartupLocation="CenterScreen"
+		Topmost="True">
+	<Window.Resources>
+		<local:ScoreToGradeConverter x:Key="SGC"/>
+		<local:ScoreToColorConverter x:Key="SCC"/>
+	</Window.Resources>
+    <StackPanel Margin="10">
+		<!--Propertybinding-->
+		<!--Synchronisation von zwei UI-Komponenten-->
+		<!--Wenn in der einen Komponente sich etwas ändert, ändert sich etwas in der anderen Komponente-->
+		<!--Bei einem Binding müssen zwei DependencyProperties verbunden werden-->
+		
+		<!--Beispiel: Slider an TextBlock binden-->
+		<!--Quelle muss einen Namen haben-->
+		<!--Über diesen Namen muss das Binding gemacht werden-->
+		<!--WICHTIG: Bindings müssen immer am Ziel definiert werden-->
+		<TextBlock>
+			<TextBlock.Text>
+				<Binding ElementName="TestSlider" Path="Value"/> <!--Binding Objekt anlegen-->
+			</TextBlock.Text>
+		</TextBlock>
+		<Slider Minimum="0" Maximum="100"
+				Name="TestSlider"/>
+
+		<!--Kurzform per MarkupExtension-->
+		<TextBlock Text="{Binding ElementName=TestSlider, Path=Value}"/>
+		
+		<!--Binding Mode-->
+		<!--Bestimmt die Richtung der Bindung-->
+		<!--Standard: OneWay (kann überschrieben werden)-->
+		<TextBox Text="{Binding ElementName=TestSlider, Path=Value, Mode=TwoWay}"/>
+		
+		<!--UpdateSourceTrigger-->
+		<!--Bestimmt, wann das Binding ausgeführt wird-->
+		<!--Standard: LostFocus-->
+		<!--Explicit: Muss über das Backend ausgeführt werden-->
+		<TextBox Text="{Binding ElementName=TestSlider, Path=Value, Mode=TwoWay, UpdateSourceTrigger=Explicit}"
+				 Name="TB"/>
+		<Button Click="Button_Click"
+				Content="Update"/>
+		
+		<!--Converter-->
+		<!--Stück C#-Code, welches bei einem Binding eingesetzt wird-->
+		
+		<!--Beispiel: Punktzahl (0-100), übersetzen in Schulnote und Farbe-->
+		<Slider Minimum="0" Maximum="100" Name="ScoreSlider"
+				TickFrequency="1" IsSnapToTickEnabled="True"/>
+		<TextBlock Text="{Binding ElementName=ScoreSlider, Path=Value, Converter={StaticResource SGC}}"
+				   Background="{Binding ElementName=ScoreSlider, Path=Value, Converter={StaticResource SCC}}"
+				   Foreground="Black"
+				   Padding="10"/>
+		<!--Zwei Converter: Schulnote (double -> string), Farbe (double -> Brush)-->
+		
+		<!--MultiBinding-->
+		<!--Binding mit X Quellen und einem Ziel-->
+		<!--Benötigt immer einen Converter-->
+		
+		<!--Beispiel: 4 Slider -> Margin-->
+		<Slider Minimum="0" Maximum="100" Name="LSlider"/>
+		<Slider Minimum="0" Maximum="100" Name="TSlider"/>
+		<Slider Minimum="0" Maximum="100" Name="RSlider"/>
+		<Slider Minimum="0" Maximum="100" Name="BSlider"/>
+		<Button Content="Margin Test">
+			<Button.Margin>
+				<MultiBinding>
+					<MultiBinding.Bindings>
+						<Binding ElementName="LSlider" Path="Value"/>
+						<Binding ElementName="TSlider" Path="Value"/>
+						<Binding ElementName="RSlider" Path="Value"/>
+						<Binding ElementName="BSlider" Path="Value"/>
+					</MultiBinding.Bindings>
+					<MultiBinding.Converter>
+						<local:FourValueToMarginConverter/>
+					</MultiBinding.Converter>
+				</MultiBinding>
+			</Button.Margin>
+		</Button>
+		<Separator/>
+	</StackPanel>
+</Window>

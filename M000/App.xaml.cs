@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace M002
+namespace M000
 {
 	/// <summary>
 	/// Interaction logic for App.xaml

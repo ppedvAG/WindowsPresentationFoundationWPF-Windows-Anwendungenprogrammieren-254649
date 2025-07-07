@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace M003
+namespace M000
 {
 	/// <summary>
 	/// Interaction logic for MainWindow.xaml
