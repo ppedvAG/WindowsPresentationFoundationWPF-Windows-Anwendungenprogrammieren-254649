@@ -1,0 +1,38 @@
+﻿<Window x:Class="M005.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:M005"
+        Title="MainWindow" Height="450" Width="800"
+		WindowStartupLocation="CenterScreen"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		Topmost="True">
+	<StackPanel Margin="10">
+		<!--Data Binding-->
+		<!--Binding zw. einer Backend Variable und einer GUI-Komponente-->
+		<!--Benötigt 2 Dinge: DataContext, INotifyPropertyChanged-->
+		
+		<!--Beispiel: Zähler mit Button-->
+		<!--Beim Binding wird hier nur Path benötigt (kein ElementName)-->
+		<!--WICHTIG: Bei einer Bindung ins Backend, muss die Backendvariable ein Property sein-->
+		
+		<!--DataContext-->
+		<!--Objekt, welches die Werte an die GUI weitergibt-->
+		<!--Kann ein beliebiges Objekt sein (auch das Window selbst)-->
+		<!--WICHTIG: DataContext wird nach unten weitergegeben-->
+		<!--Trick: Window sich selbst als DataContext setzen-->
+		<!--1. DataContext="{Binding RelativeSource={RelativeSource Self}}"-->
+		<!--2. this.DataContext = this;-->
+		<TextBlock Text="{Binding Path=Counter}"/>
+
+		<!--INotifyPropertyChanged-->
+		<!--Button funktioniert nicht, weil die Zahl nicht an die GUI weitergegeben wird-->
+		<!--Lösung: INotifyPropertyChanged-->
+		<!--Benachrichtigungsmechanismus, welcher die GUI informiert, wenn Änderungen im Backend auftreten-->
+		<Button Content="Counter++"
+				Click="Button_Click"/>
+		
+		<!--ObservableCollection-->
+		<!--Liste, welche INotifyPropertyChanged implementiert-->
+		<ListBox ItemsSource="{Binding Nummern}"/>
+	</StackPanel>
+</Window>
