@@ -1,0 +1,91 @@
+﻿<Window x:Class="M006.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:M006"
+		xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+        Title="MainWindow" Height="450" Width="800"
+		WindowStartupLocation="CenterScreen"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		Topmost="True">
+	<Window.Resources>
+		<sys:Double x:Key="DefaultFontSize">30</sys:Double>
+		<SolidColorBrush x:Key="DefaultBackground" Color="Aqua"/>
+		<local:Person ID="0" Name="Max" x:Key="DefaultPerson"/> <!--Eigenes Objekt mit Variablen-->
+		<TextBlock Text="Hallo" x:Key="HalloTB"/>
+
+		<!--..........................................................................................-->
+		
+		<!--Wenn ein Style als Ressource angelegt wird, und keinen Key hat, ist dieser global-->
+		<Style TargetType="Button">
+			<Setter Property="FontSize" Value="50"/>
+			<Setter Property="Background">
+				<Setter.Value>
+					<LinearGradientBrush>
+						<GradientStop Offset="0" Color="Violet"/>
+						<GradientStop Offset="1" Color="LightGreen"/>
+					</LinearGradientBrush>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style TargetType="DatePicker"
+			   BasedOn="{StaticResource {x:Type DatePicker}}"
+			   x:Key="TestStyle">
+			<Setter Property="Background" Value="LightGreen"/>
+		</Style>
+	</Window.Resources>
+    <StackPanel>
+		<!--Resources-->
+		<!--Objekte, welche im Frontend abgelegt werden (XAML)-->
+		<!--Können im Backend angegriffen werden-->
+
+		<!--StaticResource-->
+		<!--Bindet die Resource einmalig ein, und aktualisiert sie später nicht mehr-->
+		<Button Content="Hallo Welt"
+				FontSize="{StaticResource DefaultFontSize}"
+				Background="{StaticResource DefaultBackground}"/>
+
+		<ContentPresenter Content="{StaticResource WeltTB}"/>
+
+		<Slider Minimum="10" Maximum="100" Value="{Binding Resources[DefaultFontSize]}"/>
+		
+		<!--DynamicResource-->
+		<!--Stellt eine dynamische Verbindung zur Ressource her-->
+		<!--Wenn die Ressource sich verändert, wird sie hier auch aktualisiert-->
+		<Button Content="Hallo Welt"
+				FontSize="{DynamicResource DefaultFontSize}"/>
+
+		<!--x:Static-->
+		<!--Bietet statischen Zugriff auf Felder im Backend-->
+		<DatePicker SelectedDate="{x:Static sys:DateTime.Today}"/>
+		
+		<!--..........................................................................................-->
+		
+		<!--Styles-->
+		<!--Sammlung von Settern, welche auf die entsprechende UI-Komponente angewandt werden-->
+		<!--Müssen als Ressource angelegt werden-->
+		<!--WICHTIG: TargetType angeben-->
+		<Button Content="Test">
+			<Button.Style>
+				<Style TargetType="Button">
+					<Setter Property="FontSize" Value="50"/>
+					<Setter Property="IsEnabled" Value="False"/>
+					<Setter>
+						<Setter.Property>
+							Background
+						</Setter.Property>
+						<Setter.Value>
+							<LinearGradientBrush>
+								<GradientStop Offset="0" Color="Violet"/>
+								<GradientStop Offset="1" Color="LightGreen"/>
+							</LinearGradientBrush>
+						</Setter.Value>
+					</Setter>
+				</Style>
+			</Button.Style>
+		</Button>
+
+		<DatePicker SelectedDate="{x:Static sys:DateTime.Today}"
+					Style="{StaticResource TestStyle}"/>
+	</StackPanel>
+</Window>
