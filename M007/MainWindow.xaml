@@ -1,0 +1,118 @@
+﻿<Window x:Class="M007.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:M007"
+        Title="MainWindow" Height="450" Width="300"
+		WindowStartupLocation="CenterScreen"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		Topmost="True">
+	<Window.Resources>
+		<Style TargetType="Button">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Border BorderBrush="Black"
+							BorderThickness="3"
+							Background="{TemplateBinding Background}"
+							Padding="3">
+							<!--TemplateBinding: Nimmt Werte aus der Komponente und baut diese im Template ein-->
+							<!--Wird ausschließlich für ControlTemplate verwendet-->
+							<TextBlock Text="{TemplateBinding Content}"
+								   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		
+		<!--...................................................................-->
+
+		<local:MarkeToImagePathConverter x:Key="MIPC"/>
+		
+		<!--WICHTIG: Wie bei Style/ControlTemplate muss auch hier der TargetType angegeben werden-->
+		<DataTemplate DataType="{x:Type local:Fahrzeug}">
+			<StackPanel Orientation="Horizontal">
+				<!--Aufgabe: Images in den Zeilen anzeigen-->
+				<Image Source="C:\Users\lk3\source\repos\WPF_2025_07_07\M007\Images\velocity.png"
+							   Height="30"/>
+				<TextBlock Text="{Binding MaxV, StringFormat=' {0}km/h'}"
+								   Margin="0, 0, 5, 0"
+								   VerticalAlignment="Center"/>
+				<Image Source="{Binding Marke, Converter={StaticResource MIPC}}"
+							   VerticalAlignment="Center"
+							   Height="30"/>
+			</StackPanel>
+		</DataTemplate>
+	</Window.Resources>
+	<StackPanel>
+		<!--Templates-->
+		<!--ControlTemplate, DataTemplate-->
+		<!--ControlTemplate: Neudesign einer Komponente (ähnlich wie ein Style)-->
+		<!--DataTemplate: Darstellung von Daten (innerhalb von Listenkomponenten)-->
+		
+		<!--ControlTemplate-->
+		<Button Content="Hallo Welt"
+				HorizontalContentAlignment="Center"
+				Background="Aqua"
+				FontSize="30"
+				Click="Button_Click">
+			<Button.Template>
+				<!--Wenn das ControlTemplate leer ist, ist vom Button nichts zu sehen-->
+				<!--Der Button kann jetzt von Grund auf neu aufgebaut werden-->
+				<ControlTemplate TargetType="Button">
+					<Border BorderBrush="Black"
+							BorderThickness="3"
+							Background="{TemplateBinding Background}"
+							Padding="3">
+						<!--TemplateBinding: Nimmt Werte aus der Komponente und baut diese im Template ein-->
+						<!--Wird ausschließlich für ControlTemplate verwendet-->
+						<TextBlock Text="{TemplateBinding Content}"
+								   HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+					</Border>
+				</ControlTemplate>
+			</Button.Template>
+		</Button>
+
+		<!--ControlTemplate über Style verteilen-->
+		<Button Content="Test"/>
+		
+		<!--...................................................................-->
+		
+		<!--DataTemplate-->
+		<!--Darstellung von Daten verändern-->
+		<!--Wird effektiv immer bei Listenkomponenten eingesetzt-->
+		<ListBox ItemsSource="{Binding Fahrzeuge}">
+			<ListBox.ItemTemplate>
+				<!--WICHTIG: Wie bei Style/ControlTemplate muss auch hier der TargetType angegeben werden-->
+				<DataTemplate DataType="local:Fahrzeug">
+					<StackPanel Orientation="Horizontal">
+						<!--Aufgabe: Images in den Zeilen anzeigen-->
+						<Image Source="C:\Users\lk3\source\repos\WPF_2025_07_07\M007\Images\velocity.png"
+							   Height="30"/>
+						<TextBlock Text="{Binding MaxV, StringFormat=' {0}km/h'}"
+								   Margin="0, 0, 5, 0"
+								   VerticalAlignment="Center"/>
+						<Image Source="{Binding Marke, Converter={StaticResource MIPC}}"
+							   VerticalAlignment="Center"
+							   Height="30"/>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+		
+		<!--DataTemplates können auch als Resource angelegt werden-->
+		<!--Jedes Fahrzeug Objekt wird dann mit dem Template dargestellt-->
+		<!--WICHTIG: Als Ressource muss für DataType {x:Type ...} verwendet werden-->
+		<ComboBox ItemsSource="{Binding Fahrzeuge}"/>
+		
+		<!--ItemsPanelTemplate-->
+		<!--Definiert, dass eine Listenkomponente einen anderen Container als StackPanel haben soll-->
+		<ComboBox ItemsSource="{Binding Fahrzeuge}">
+			<ComboBox.ItemsPanel>
+				<ItemsPanelTemplate>
+					<UniformGrid Columns="3"/>
+				</ItemsPanelTemplate>
+			</ComboBox.ItemsPanel>
+		</ComboBox>
+	</StackPanel>
+</Window>
