@@ -1,12 +1,30 @@
 ﻿<Window x:Class="M000.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+		xmlns:local="clr-namespace:M000"
         Title="MainWindow" Height="450" Width="300"
 		WindowStartupLocation="CenterScreen"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
 		Topmost="True"
 		SizeToContent="Height"
 		ResizeMode="NoResize"
 		FontSize="14">
+	<Window.Resources>
+		<Style TargetType="UniformGrid">
+			<Setter Property="Columns" Value="2"/>
+			<Setter Property="Margin" Value="0, 5, 0, 0"/>
+		</Style>
+		<local:BooleanToGeschlechtConverter x:Key="BGC"/>
+		<!--<ObjectDataProvider x:Key="Odp_Colors" MethodName="GetType" ObjectType="{x:Type sys:Type}">
+			<ObjectDataProvider.MethodParameters>
+				<sys:String>
+					System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35
+				</sys:String>
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
+		<ObjectDataProvider x:Key="Odp_ColorsProperties" MethodName="GetProperties" ObjectInstance="{StaticResource Odp_Colors}"/>-->
+	</Window.Resources>
 	<Window.Background>
 		<LinearGradientBrush>
 			<GradientStop Offset="0" Color="Violet"/>
@@ -14,42 +32,58 @@
 		</LinearGradientBrush>
 	</Window.Background>
 	<StackPanel Margin="5">
-		<UniformGrid Columns="2">
+		<UniformGrid>
 			<TextBlock Text="Vorname: "/>
-			<TextBox/>
+			<TextBox Text="{Binding DiePerson.Vorname}"/>
 		</UniformGrid>
-		<UniformGrid Columns="2">
+		<UniformGrid>
 			<TextBlock Text="Nachname: "/>
-			<TextBox/>
+			<TextBox Text="{Binding DiePerson.Nachname}"/>
 		</UniformGrid>
-		<UniformGrid Columns="2">
+		<UniformGrid>
 			<TextBlock Text="Geburtsdatum: "/>
-			<DatePicker/>
+			<DatePicker SelectedDate="{Binding DiePerson.Gebdat}"/>
 		</UniformGrid>
-		<UniformGrid Columns="2">
+		<UniformGrid>
 			<TextBlock Text="Verheiratet: "/>
-			<CheckBox/>
+			<CheckBox IsChecked="{Binding DiePerson.Verheiratet}"/>
 		</UniformGrid>
-		<UniformGrid Columns="2">
+		<UniformGrid>
 			<TextBlock Text="Lieblingsfarbe: "/>
-			<ComboBox>
-				<ComboBoxItem Content="Rot" Foreground="Red"/>
+			<ComboBox ItemsSource="{local:Colors}"
+					  SelectedValue="{Binding DiePerson.Lieblingsfarbe}"
+					  SelectedValuePath="Color">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<StackPanel Orientation="Horizontal">
+							<Rectangle Width="20"
+									   Height="20"
+									   Margin="0, 0, 5, 0"
+									   StrokeThickness="2"
+									   Stroke="Black"
+									   Fill="{Binding Brush}"/>
+							<TextBlock Text="{Binding Name}"/>
+							<TextBlock Text="{Binding ColorCode, StringFormat=' ({0})'}"/>
+						</StackPanel>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+				<!--<ComboBoxItem Content="Rot" Foreground="Red"/>
 				<ComboBoxItem Content="Blau" Foreground="Blue"/>
 				<ComboBoxItem Content="Grün" Foreground="Green"/>
-				<ComboBoxItem Content="Gelb" Foreground="Yellow"/>
+				<ComboBoxItem Content="Gelb" Foreground="Yellow"/>-->
 			</ComboBox>
 		</UniformGrid>
-		<UniformGrid Columns="2">
+		<UniformGrid>
 			<TextBlock Text="Geschlecht: "/>
 			<StackPanel>
-				<RadioButton GroupName="G" Content="M"/>
-				<RadioButton GroupName="G" Content="W"/>
-				<RadioButton GroupName="G" Content="D"/>
+				<RadioButton Content="M" IsChecked="{Binding DiePerson.Gender, Converter={StaticResource BGC}, ConverterParameter={x:Static local:Geschlecht.M}}"/>
+				<RadioButton Content="W" IsChecked="{Binding DiePerson.Gender, Converter={StaticResource BGC}, ConverterParameter={x:Static local:Geschlecht.W}}"/>
+				<RadioButton Content="D" IsChecked="{Binding DiePerson.Gender, Converter={StaticResource BGC}, ConverterParameter={x:Static local:Geschlecht.D}}"/>
 			</StackPanel>
 		</UniformGrid>
-		<UniformGrid Columns="2" Margin="50, 0, 0, 0">
-			<Button Content="OK"/>
-			<Button Content="Abbrechen"/>
+		<UniformGrid Margin="50, 0, 0, 0">
+			<Button Content="OK" Margin="0, 0, 2.5, 0" Click="Button_Click"/>
+			<Button Content="Abbrechen" Margin="2.5, 0, 0, 0"/>
 		</UniformGrid>
     </StackPanel>
 </Window>

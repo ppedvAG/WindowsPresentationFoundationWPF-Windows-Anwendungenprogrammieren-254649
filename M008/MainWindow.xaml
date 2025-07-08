@@ -1,0 +1,75 @@
+﻿<Window x:Class="M008.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:sys="clr-namespace:System;assembly=System.Runtime"
+		xmlns:http="clr-namespace:System.Net;assembly=System.Net"
+        xmlns:local="clr-namespace:M008"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Title="MainWindow" Height="450" Width="800"
+		WindowStartupLocation="CenterScreen"
+		Topmost="True">
+    <StackPanel>
+		<!--MarkupExtension-->
+		<!--Verantwortlich für das Verschieben von Werten zw. zwei Endpunkten (Binding, StaticResource, ...)-->
+		
+		<!--Beispiel: Enum an ComboBox anbinden-->
+		<!--Klassischer Weg: -->
+		<!--Nachteil: Backend wird mit Enum Variablen zugemüllt-->
+		<ComboBox ItemsSource="{Binding Wochentage}"/>
+
+		<!--Eigene MarkupExtension-->
+		<ComboBox ItemsSource="{local:Enum EnumType=sys:DayOfWeek}"/>
+		<ComboBox ItemsSource="{local:Enum EnumType=http:HttpStatusCode}"/>
+		
+		<!--Beispiel 2: Range-Extension-->
+		<ComboBox ItemsSource="{local:Range Start=10, End=50}"/>
+		
+		<!--.................................................................-->
+
+		<!--Self Binding-->
+		<Slider Minimum="1" Maximum="200" Name="WSlider"/>
+		<Border Width="{Binding ElementName=WSlider, Path=Value}"
+				Height="{Binding RelativeSource={RelativeSource Self}, Path=Width}"
+				Background="Aqua"/>
+
+		<!--TemplatedParent-->
+		<!--TemplatedParent == TemplateBinding (aber länger)-->
+		<Button Content="Hallo Welt"
+				HorizontalContentAlignment="Center"
+				Background="Aqua"
+				FontSize="30">
+			<Button.Template>
+				<ControlTemplate TargetType="Button">
+					<Border BorderBrush="Black"
+							BorderThickness="3"
+							Background="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=Background}"
+							Padding="3">
+						<TextBlock Text="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+					</Border>
+				</ControlTemplate>
+			</Button.Template>
+		</Button>
+		
+		<!--FindAncestor-->
+		<Grid Background="LightGreen">
+			<Grid Background="Orange">
+				<Grid Background="Aqua">
+					<Button Content="Test"
+							Background="{Binding RelativeSource={RelativeSource AncestorType={x:Type Grid}, AncestorLevel=1}, Path=Background}"/>
+				</Grid>
+			</Grid>
+		</Grid>
+		
+		<!--PreviousData-->
+		<ListBox ItemsSource="{local:Range Start=0, End=10}">
+			<ListBox.ItemTemplate>
+				<DataTemplate>
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="{Binding .}" Margin="0, 0, 5, 0"/>
+						<TextBlock Text="{Binding RelativeSource={RelativeSource Mode=PreviousData}}"/>
+					</StackPanel>
+				</DataTemplate>
+			</ListBox.ItemTemplate>
+		</ListBox>
+	</StackPanel>
+</Window>
