@@ -1,0 +1,86 @@
+﻿<Window x:Class="M009.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:M009"
+		xmlns:valid="clr-namespace:M009.Validation"
+        Title="MainWindow" Height="450" Width="300"
+		DataContext="{Binding RelativeSource={RelativeSource Self}}"
+		WindowStartupLocation="CenterScreen"
+		Topmost="True"
+		FontSize="40">
+	<Window.Resources>
+		<!--ErrorTemplate-->
+		<!--Eigenes ControlTemplate, welches beim Fehlerfall angezeigt wird-->
+		<!--WICHTIG: Muss per Validation.ErrorTemplate eingebunden werden-->
+		<ControlTemplate x:Key="ET">
+			<StackPanel>
+				<!--AdornedElementPlaceholder: Das gerade validierte Element (TextBox)-->
+				<Border BorderBrush="Red" BorderThickness="3">
+					<AdornedElementPlaceholder Name="AEP"/>
+				</Border>
+				<Popup IsOpen="{Binding ElementName=AEP, Path=AdornedElement.IsMouseOver, Mode=OneWay}">
+					<Border BorderBrush="Red" BorderThickness="2" Background="White">
+						<TextBlock Text="{Binding ElementName=AEP, Path=AdornedElement.(Validation.Errors)[0].ErrorContent}"
+								   FontSize="20"
+								   Margin="2"/>
+					</Border>
+				</Popup>
+			</StackPanel>
+		</ControlTemplate>
+
+		<Style TargetType="TextBox">
+			<Setter Property="Validation.ErrorTemplate" Value="{StaticResource ET}"/>
+		</Style>
+
+		<valid:ValidationRuleCollection x:Key="TextValidations">
+			<valid:LetterValidation/>
+			<valid:LengthValidation ValidatesOnTargetUpdated="True" Min="3" Max="15"/>
+		</valid:ValidationRuleCollection>
+	</Window.Resources>
+	<StackPanel Margin="5">
+		<!--Validation-->
+		<!--User ist nicht schlau -> Felder prüfen-->
+		
+		<!--Drei Möglichkeiten: -->
+		<!--1. ValidationRule(s)-->
+		<!--2. ValidateOnException-->
+		<!--3. ValidateOnDataError-->
+
+		<!--....................................................................................-->
+		
+		<!--ValidationRule-->
+		<!--Aufgabe: Nur Buchstaben und zw. 3 und 15 Zeichen-->
+		<TextBox Validation.ErrorTemplate="{StaticResource ET}">
+			<TextBox.Text>
+				<Binding Path="VollerName" UpdateSourceTrigger="PropertyChanged">
+					<Binding.ValidationRules>
+						<valid:LetterValidation/>
+						<valid:LengthValidation ValidatesOnTargetUpdated="True" Min="3" Max="15"/>
+						<!--ValidatesOnTargetUpdated: Validiere von Anfang an-->
+					</Binding.ValidationRules>
+				</Binding>
+			</TextBox.Text>
+		</TextBox>
+		<Button Content="Test" Click="Button_Click"/>
+		
+		<!--2 Probleme: Fehlermeldung anzeigen, Langform -> Kurzform-->
+		<!--Fehlermeldung anzeigen: Eigenes ErrorTemplate (siehe Window.Resources)-->
+		<!--Langform -> Kurzform: Eigene MarkupExtension-->
+		<TextBox Text="{valid:Validation Binding={Binding VollerName2, UpdateSourceTrigger=PropertyChanged}, 
+										 RuleCollection={StaticResource TextValidations}}"/>
+		
+		<!--....................................................................................-->
+		
+		<!--ValidateOnException-->
+		<!--Wenn im Setter des Properties eine Exception geworfen wird, wird validiert-->
+		<!--Fehlermeldung der Exception kann im Frontend angezeigt werden-->
+		<TextBox Text="{Binding VollerName3, ValidatesOnExceptions=True, UpdateSourceTrigger=PropertyChanged}"/>
+
+		<!--....................................................................................-->
+
+		<!--ValidateOnDataErrors-->
+		<!--Implementiert in der Backend Klasse das IDataErrorInfo Interface-->
+		<!--Alle Validierung findet dann in dem gegebenen Indexer statt-->
+		<TextBox Text="{Binding VollerName4, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+	</StackPanel>
+</Window>
