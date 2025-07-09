@@ -1,0 +1,81 @@
+﻿<Window x:Class="M010.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:M010"
+        Title="MainWindow" Height="450" Width="800"
+		WindowStartupLocation="CenterScreen"
+		Topmost="True">
+    <StackPanel>
+		<!--Trigger-->
+		<!--Style mit Bedingung(en)-->
+		
+		<!--3 Typen-->
+		<!--Trigger: Trigger, welcher nur auf der selben Komponente aktiviert werden kann-->
+		<!--DataTrigger: Trigger, welcher per Binding aktiviert wird-->
+		<!--EventTrigger: Trigger, welcher per Event aktiviert wird (nur für Animationen)-->
+		<!--Zu Trigger und DataTrigger gibt es noch die Multi- Variante-->
+		
+		<!--Beispiel: Wenn der Cursor über dem Button ist, soll seine Schriftart geändert werden-->
+		<Button Content="Hallo Welt">
+			<!--Trigger müssen immer im Style definiert werden-->
+			<Button.Style>
+				<Style TargetType="Button">
+					<Style.Triggers>
+						<!--<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="FontFamily" Value="Elephant"/>
+							<Setter Property="FontSize" Value="30"/>
+						</Trigger>-->
+						
+						<!--MultiTrigger mit mehreren Bedingungen-->
+						<MultiTrigger>
+							<MultiTrigger.Conditions>
+								<Condition Property="IsMouseOver" Value="True"/>
+							</MultiTrigger.Conditions>
+							<Setter Property="FontSize" Value="50"/>
+						</MultiTrigger>
+					</Style.Triggers>
+				</Style>
+			</Button.Style>
+		</Button>
+		
+		<!--Beispiel: Wenn eine CheckBox aktiviert ist, soll ein Button sichtbar sein-->
+		<CheckBox Content="Button zeigen" Name="CB"/>
+
+		<!--WICHTIG: Wenn ein Button deaktiviert/unsichtbar ist, wird sein Trigger nicht ausgeführt-->
+		<Button Content="Hallo">
+			<Button.Style>
+				<Style TargetType="Button">
+					<Setter Property="Visibility" Value="Collapsed"/>
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding ElementName=CB, Path=IsChecked}" Value="True">
+							<Setter Property="Visibility" Value="Visible"/>
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Button.Style>
+		</Button>
+		
+		<!--Beispiel: Wenn drei CheckBoxen aktiviert sind, soll der Button aktiviert sein-->
+		<CheckBox Content="Button aktivieren" Name="CB1"/>
+		<CheckBox Content="Button aktivieren" Name="CB2"/>
+		<CheckBox Content="Button aktivieren" Name="CB3"/>
+
+		<Button Content="Hallo">
+			<Button.Style>
+				<Style TargetType="Button">
+					<Setter Property="IsEnabled" Value="False"/>
+					<Style.Triggers>
+						<MultiDataTrigger>
+							<MultiDataTrigger.Conditions>
+								<Condition Binding="{Binding ElementName=CB1, Path=IsChecked}" Value="True"/>
+								<Condition Binding="{Binding ElementName=CB2, Path=IsChecked}" Value="True"/>
+								<Condition Binding="{Binding ElementName=CB3, Path=IsChecked}" Value="False"/>
+							</MultiDataTrigger.Conditions>
+							<Setter Property="IsEnabled" Value="True"/>
+						</MultiDataTrigger>
+					</Style.Triggers>
+				</Style>
+			</Button.Style>
+		</Button>
+	</StackPanel>
+</Window>
