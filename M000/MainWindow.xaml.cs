@@ -5,7 +5,7 @@ namespace M000;
 
 public partial class MainWindow : Window
 {
-	public Person DiePerson { get; set; } = new();
+	public Person DiePerson { get; set; } = new() { Lieblingsfarbe = Colors.Aqua };
 
 	public MainWindow()
 	{

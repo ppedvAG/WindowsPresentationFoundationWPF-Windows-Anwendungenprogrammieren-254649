@@ -1,0 +1,31 @@
+﻿<Window x:Class="M014.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="clr-namespace:M014.ViewModel"
+        xmlns:local="clr-namespace:M014"
+        Title="MainWindow" Height="450" Width="800"
+		WindowStartupLocation="CenterScreen"
+		Topmost="True">
+	<Window.DataContext>
+		<vm:MainWindowViewModel/>
+	</Window.DataContext>
+	<StackPanel>
+		<!--Model-View-ViewModel-->
+		<!--Designansatz für GUI Design in WPF/MAUI-->
+		<!--Hauptmerkmal: Standard Backendklassen bleiben unberührt-->
+		<!--Vorteil: Saubere Trennung von GUI und Backend-->
+		
+		<!--Aufbau: -->
+		<!--1. Ordnerstruktur herstellen-->
+		<!--2. Bestehende Dateien in die entsprechenden Ordner bewegen-->
+		<!--2.1. Namespaces anpassen (Backend, x:Class, App.xaml)-->
+		<!--3. ViewModel Klassen erstellen-->
+		<!--3.1. ViewModel Klassen als DataContext in den Views implementieren-->
+
+		<TextBlock Text="{Binding Hallo}"/>
+		<Button Content="Hallo Welt"
+				Command="{Binding ExitCommand}"/>
+		
+		<!--Aufgabe: M012 zu MVVM umbauen-->
+	</StackPanel>
+</Window>
